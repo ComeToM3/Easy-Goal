@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  background-color: #0c4a6e;  
+}
+
+option {
+  font-size: small;
+}
+select {
+  font-size: small;
+
+}
+/* Toggle Navbar */
+.toggle-right {
+  position: relative;
+  margin: 0.5rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: #bae6fd;
+  text-align: end;
+}
+
+.toggle-left {
+  position: relative;
+  margin: 0.5rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: #bae6fd;
+  text-align: start;
+}
+
+/* Toggle Navbar Fin */
+
+
+/* Dashboard */
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  margin: .25rem;
+}
+
+.div-forms {
+  background-color: #0c4a6e;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.toggle-forms {
+  background-color: #0c4a6e;
+  padding: 0.2rem;
+  border-radius: 0.25rem;
+  
+}
+
+.div-calorique {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Dashboard Fin */
+
+/* input  */
+
+.input {
+  background-color: #f0f9ff;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  width: 5rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  text-align: center; 
+  
+}
+
+.input-select {
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  width: 5rem;
+  height: 1.45rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  text-align: center; 
+  
+}
+
+.input-select:focus {
+  outline: none;
+}
+
+
+.input:focus {
+  outline: none;
+}
+
+
+/* Metabolisme */
+
+
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 250px;}
+
+.info-item::after {
+  content: attr(aria-label);
+  position: absolute;
+  width: 10rem;
+  top: 70%;
+  left: 34%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 4px;
+  font-size: 0.8em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.info-item:hover::after {
+  opacity: 1;
+}
+
+
+/* Formulaire Login */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Couleur semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  background-color: white;
+  width: 290px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+
+.input-log {
+  margin: .4rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+  text-align: center; 
+}
+
+.input-log::placeholder {
+  color: #333; /* Couleur du texte du placeholder */
+}
+
+.input-log:focus {
+  outline: none;
+}
+
+
+.btn-log{
+  background-color: #0284c7;
+  margin: .4rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+  text-align: center; 
+}
+
+.helmet {
+  width: 150px;
+}
+/* Formulaire Login Fin */
+
+
+/* CSS */
+
+.ulayout-content {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.ulayout-content.active {
+  opacity: 1;
+}
