@@ -1,4 +1,4 @@
-import prisma from "../../../../lib/prismaClient";
+import prisma from "../../../../../lib/prismaClient";
 import DayFilter from "@/utils/dayFilter";
 
 export default async function handler(req, res) {

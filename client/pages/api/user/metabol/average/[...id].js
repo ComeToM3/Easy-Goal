@@ -1,4 +1,4 @@
-import prisma from "../../../../lib/prismaClient";
+import prisma from "../../../../../lib/prismaClient";
 import DayFilter from "@/utils/dayFilter";
 
 export default async function handler(req, res) {
@@ -17,7 +17,6 @@ export default async function handler(req, res) {
           userId: userId,
         },
       });
-      console.log(averageMetabolData);
 
       if (averageMetabolData) {
         res.status(200).json(averageMetabolData);

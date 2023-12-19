@@ -60,11 +60,11 @@ export default function Navbar() {
   return (
     <>
       <nav className="h-20 rounded-md m-2 bg-sky-50 flex justify-between align-middle items-center">
-        <div className="m-2" ref={ToggleLeftRef}>
-          <h1 onClick={toggleToggleLeft}>EasyGoal</h1>
+        <div className="transform hover:scale-110 transition duration-300 cursor-pointer m-4" ref={ToggleLeftRef}>
+          <h1 onClick={toggleToggleLeft}>Easy Goal</h1>
         </div>
 
-        <div className="m-2" ref={ToggleRightRef}>
+        <div className="transform hover:scale-110 transition duration-300 cursor-pointer m-4" ref={ToggleRightRef}>
           <h1 onClick={toggleToggleRight}>Bonjour, </h1>
         </div>
       </nav>

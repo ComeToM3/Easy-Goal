@@ -8,12 +8,9 @@ export default async function handler(req, res) {
       const ID = req.query.userId;
       const { startOfDay, endOfDay } = DayFilter();
 
-      const motivResData = await prisma.MoyRes.findMany({
+      const motivResData = await prisma.MoyRes.findFirst({
         where: {
-          timeSp: {
-            gte: startOfDay,
-            lt: endOfDay,
-          },
+         
           userId: ID,
         },
       });

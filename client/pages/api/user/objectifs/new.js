@@ -6,39 +6,38 @@ import DayFilter from "@/utils/dayFilter";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      const { ID, LTG, OBJ1, ACT1, TOA1, OBJ2, ACT2, TOA2, OWK, PSB,  } = req.body;
-      const { startOfDay, endOfDay } = DayFilter();
+      const { ID, LTG, OBJ1,  IPT, ACT1, TOA1, OBJ2, ACT2, TOA2, OWK, PSB } =
+        req.body;
+      const { startOfMonth, endOfMonth } = DayFilter();
       const userId = uuidv4();
 
-     
       const existingTimeSp = await prisma.Objectifs.findFirst({
         where: {
           timeSp: {
-            gte: startOfDay,
-            lt: endOfDay,
+            gte: startOfMonth,
+            lt: endOfMonth,
           },
           userId: ID,
         },
       });
 
-      if (existingTimeSp !== null && existingTimeSp.length > 0 && existingTimeSp.length < 2) {
+      if (existingTimeSp) {
         return res.status(400).json({ message: "Une entrée par jour" });
       }
-      
-      
 
-      const MetabolEntry = await prisma.Objectifs.create({
+      const Entry = await prisma.Objectifs.create({
         data: {
           id: userId.toString(),
           ltg: LTG,
-          obj1: OBJ1,
-          act1: ACT1,
           toa1: TOA1,
-          obj2: OBJ2,
-          act2: ACT2,
           toa2: TOA2,
           owk: OWK,
           psb: PSB,
+          ipt: IPT,
+          obj1: OBJ1,
+          act1: ACT1,
+          obj2: OBJ2,
+          act2: ACT2,
           timeSp: new Date(),
           userId: ID,
         },

@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-
 export default function UHeader() {
   const fetchData = async (endpoint) => {
     const token = localStorage.getItem("token");
     const decodedToken = JSON.parse(atob(token.split(".")[1]));
     const userId = decodedToken.userId;
     try {
-      const response = await fetch(`/api/user/${endpoint}/${userId}`);
+      const response = await fetch(`/api/user/${endpoint}/average/${userId}`);
       if (response.ok) {
         const data = await response.json();
         return data;
@@ -59,11 +58,11 @@ export default function UHeader() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const anthroData = await fetchData("anthro/average");
-        const macronuData = await fetchData("macronu/average");
-        const metabolData = await fetchData("metabol/average");
-        const motivData = await fetchData("motiv/average");
-        const objectifsData = await fetchData("objectifs/average");
+        const anthroData = await fetchData("anthro");
+        const macronuData = await fetchData("macronu");
+        const metabolData = await fetchData("metabol");
+        const motivData = await fetchData("motiv");
+        const objectifsData = await fetchData("objectifs");
 
         setAnthro({
           ...anthro,
@@ -85,19 +84,21 @@ export default function UHeader() {
         });
         setMetabol({
           ...metabol,
-          mb: metabolData[0].mb,
-          bee: metabolData[0].bee,
+          mb: metabolData.mb,
+          bee: metabolData.bee,
         });
         const motivValuesMap = {
           precontemplation: "Pre-contemplation",
         };
 
-        const motivValue = motivData[0].res;
+        const motivValue = motivData.res;
         const transformedMotivValue = motivValuesMap[motivValue.toLowerCase()];
+
         setMotiv({
           ...motiv,
           res: transformedMotivValue || motivValue,
         });
+
         setObjectifs({
           ...objectifs,
           ltg: objectifsData.ltg,
@@ -117,69 +118,139 @@ export default function UHeader() {
 
     fetchUserData();
   }, []);
-
   return (
     <>
       <header className=" m-2 bg-sky-600 rounded-md">
-        <div className="p-2">
-          <div className="header-container">
-            <div className="flex justify-evenly">
-              <div >
+        <div className=" p-4">
+        <h1>Stats</h1>
+          <div className="hidden hover:show header-container ">
+            
+            <div className=" lg:flex justify-evenly ">
+              <div>
                 <h2>Mesure Anthropometrique</h2>
-                <div className="flex justify-between">
-                  <label> IMC :</label>
-                  <p>{anthro.imc}</p>
-                </div>
-                <div className="flex justify-between">
-                  <label>Poids: </label>
-                  <p>{anthro.kg} kg</p>
-                </div>
-                <div className="flex justify-between">
-                  <label>Taille: </label>
-                  <p>{anthro.cm} cm</p>
-                </div>
-                <div className="flex justify-between">
-                  <label> Âge: </label>
-                  <p>{anthro.age} </p>
-                </div>
-                <div className="flex justify-between">
-                  <label>Genre: </label>
-                  <p>{anthro.gen}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <label> Coefficient<br/> d'Activité: </label>
-                  <p>{anthro.ca}</p>
+                <div className="p-2">
+                  <div className="flex justify-between">
+                    <label> IMC :</label>
+                    <p>{anthro.imc}</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <label>Poids: </label>
+                    <p>{anthro.kg} kg</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <label>Taille: </label>
+                    <p>{anthro.cm} cm</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <label> Âge: </label>
+                    <p>{anthro.age} </p>
+                  </div>
+                  <div className="flex justify-between">
+                    <label>Genre: </label>
+                    <p>{anthro.gen}</p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <label>
+                      {" "}
+                      Coefficient
+                      <br /> d'Activité:{" "}
+                    </label>
+                    <p>{anthro.ca}</p>
+                  </div>
                 </div>
               </div>
 
               <div>
                 <h2>Mesure Métaboliques</h2>
-                <p>MB: {metabol.mb} kcal/jour</p>
-                <p>BEE: {metabol.bee} kcal/jour</p>
-                <p>
-                  Glucides : {macronu.glcP} % / {macronu.glcG} g
-                </p>
-                <p>
-                  Protéines : {macronu.proP} % / {macronu.proG} g
-                </p>
-                <p>
-                  Lipides : {macronu.lipP} % / {macronu.lipG} g
-                </p>
+                <div className="p-2">
+                  <div>
+                    <div className="flex justify-between">
+                      <label>MB :</label>
+                      <p>{metabol.mb} kcal/jour</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <label>BEE :</label>
+                      <p>{metabol.bee} kcal/jour</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h2>Macronutriments</h2>
+                <div className="p-2">
+                  <div className="flex justify-between">
+                    <label>Glucides</label>
+                    <p>
+                      {macronu.glcP} % / {macronu.glcG} g
+                    </p>
+                  </div>
+                  <div className="flex justify-between">
+                    <label>Protéines</label>
+                    <p>
+                      {macronu.proP} % / {macronu.proG} g
+                    </p>
+                  </div>
+                  <div className="flex justify-between">
+                    <label>Lipides</label>
+                    <p>
+                      {macronu.lipP} % / &nbsp;&nbsp;{macronu.lipG} g
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div>
-                <h2>Échelle d’évaluation de la motivation au changement</h2>
+                <h2>Motivation au changement</h2>
+                <div className="flex justify-between">
+                  <label>Resultat :</label>
+                  <p> {motiv.res}</p>
+                </div>
+              </div>
 
-                <p>Resultat: {motiv.res}</p>
-                <p>LTG: {objectifs.ltg}</p>
-                <p>Obj1: {objectifs.obj1}</p>
-                <p>Act1: {objectifs.act1}</p>
-                <p>Toa1: {objectifs.toa1}</p>
-                <p>Obj2: {objectifs.obj2}</p>
-                <p>Act2: {objectifs.act2}</p>
-                <p>Toa2: {objectifs.toa2}</p>
-                <p>OWK: {objectifs.owk}</p>
-                <p>PSB: {objectifs.psb}</p>
+              <div className="hide-small">
+                <div>
+                  <label>Objectif d’activité à long terme :</label>
+                  <p> {objectifs.ltg}</p>
+                </div>
+                <div>
+                  <label>Pour l’atteindre, je dois me concentrer sur :</label>
+                  <p> {objectifs.toa1}</p>
+                </div>
+                <div>
+                  <label>Pour y arriver, j’accepte de :</label>
+                  <p> {objectifs.toa2}</p>
+                </div>
+                <div>
+                  <label>
+                    Les autres s’apercevront du changement que j’apporte quand :
+                  </label>
+                  <p> {objectifs.owk}</p>
+                </div>
+                <div>
+                  <label>Il se pourrait que je sabote mon plan en :</label>
+                  <p> {objectifs.psb}</p>
+                </div>
+                <div>
+                  <label>Je me promets de :</label>
+                  <p> {objectifs.ipt}</p>
+                </div>
+                <div>
+                  <label>Objectif 1:</label>
+                  <p> {objectifs.obj1}</p>
+                </div>
+                <div>
+                  <label>Action 1 :</label>
+                  <p> {objectifs.act1}</p>
+                </div>
+
+                <div>
+                  <label>Objectif 2 :</label>
+                  <p> {objectifs.obj2}</p>
+                </div>
+                <div>
+                  <label>Action 2 :</label>
+                  <p> {objectifs.act2}</p>
+                </div>
               </div>
             </div>
           </div>

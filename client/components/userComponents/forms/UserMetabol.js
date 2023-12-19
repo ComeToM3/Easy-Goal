@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 
 export default function UserMetabol({ closeToggle }) {
+  const [anthroId, setAnthroId] = useState("");
+  const [metabolId, setMetabolId] = useState("");
+
   const [poidsKG, setPoidsKG] = useState("");
   const [tailleCM, setHauteurCM] = useState("");
   const [age, setAge] = useState("");
@@ -8,64 +11,73 @@ export default function UserMetabol({ closeToggle }) {
   const [coefficientAC, setCoefficientAC] = useState("");
 
   const getAnthoResponse = async () => {
-    const token = localStorage.getItem("token");
-    const decodedToken = JSON.parse(atob(token.split(".")[1]));
-    const userId = decodedToken.userId;
-
     try {
-      const response = await fetch(`/api/user/anthro/${userId}`, {
+      const token = localStorage.getItem("token");
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      const userId = decodedToken.userId;
+  
+      const anthroResponse = await fetch(`/api/user/anthro/${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      if (response.ok) {
-        const anthroResponse = await response.json();
-        // La réponse MetabolResponse est maintenant disponible
-        return anthroResponse;
+  
+      const metabolResponse = await fetch(`/api/user/metabol/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (anthroResponse.ok && metabolResponse.ok) {
+        const anthroData = await anthroResponse.json();
+        const metabolData = await metabolResponse.json();
+  
+        return { anthroData, metabolData };
       }
     } catch (error) {
       // Gestion des erreurs
-      console.error(
-        "Erreur lors de la récupération des données de métabolisme :",
-        error
-      );
+      console.error("Erreur lors de la récupération des données :", error);
       throw error;
     }
   };
 
   useEffect(() => {
-
     getAnthoResponse().then((res) => {
-      if (res && res.kg !== undefined) {
-        setPoidsKG(res.kg);
+      if (res && res.anthroData.id !== undefined) {
+        setAnthroId(res.anthroData.id);
       }
-      if (res && res.cm !== undefined) {
-        setHauteurCM(res.cm);
+      if (res && res.metabolData.id !== undefined) {
+        setMetabolId(res.metabolData.id);
       }
-      if (res && res.age !== undefined) {
-        setAge(res.age);
+      if (res && res.anthroData.kg !== undefined) {
+        setPoidsKG(res.anthroData.kg);
       }
-      if (res && res.gen !== undefined) {
-        setGender(res.gen);
+      if (res && res.anthroData.cm !== undefined) {
+        setHauteurCM(res.anthroData.cm);
       }
-      if (res && res.ca !== undefined) {
+      if (res && res.anthroData.age !== undefined) {
+        setAge(res.anthroData.age);
+      }
+      if (res && res.anthroData.gen !== undefined) {
+        setGender(res.anthroData.gen);
+      }
+      if (res && res.anthroData.ca !== undefined) {
         const coefficientACString = (ca) => {
-          let res = "";
-          if (ca === 1) {
-            res = "sedentaire";
-          } else if (ca === 1.1) {
-            res = "peuActif";
-          } else if (ca === 1.27 || ca === 1.25) {
-            res = "actif";
+          let resultat = "";
+          if (ca === "1") {
+            resultat = "sedentaire";
+          } else if (ca === "1.1") {
+            resultat = "peuActif";
+          } else if (ca === "1.27" || ca === "1.25") {
+            resultat = "actif";
           } else {
-            res = "tresActif";
+            resultat = "tresActif";
           }
-          return res;
+          return resultat;
         };
-
-        const coefficientString = coefficientACString(res.ca);
+        const coefficientString = coefficientACString(res.anthroData.ca);
         setCoefficientAC(coefficientString);
       }
     });
@@ -77,12 +89,14 @@ export default function UserMetabol({ closeToggle }) {
     const token = localStorage.getItem("token");
     const decodedToken = JSON.parse(atob(token.split(".")[1]));
     const userId = decodedToken.userId;
+
     const calculatedIMC = calculIMC();
     const calculatedCA = calculCA();
     const calculatedBEE = calculBEE(calculatedCA);
     const calculatedMB = calculMB(calculatedIMC);
 
     const updateMetabolData = {
+      id: metabolId,
       ID: userId,
       CA: calculatedCA,
       MB: calculatedMB,
@@ -90,6 +104,7 @@ export default function UserMetabol({ closeToggle }) {
     };
 
     const updateAnthroData = {
+      id: anthroId,
       ID: userId,
       IMC: calculatedIMC.toString(),
       KG: poidsKG.toString(),
@@ -98,10 +113,9 @@ export default function UserMetabol({ closeToggle }) {
       GEN: gender.toString(),
       CA: calculatedCA.toString(),
     };
-
     try {
       // Envoi des données pour le métabolisme
-      const metabolResponse = await fetch("/api/user/metabol/${userId}", {
+      const metabolResponse = await fetch(`/api/user/metabol/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +127,7 @@ export default function UserMetabol({ closeToggle }) {
       }
 
       // Envoi des données pour l'anthropométrie
-      const anthroResponse = await fetch("/api/user/anthro/${userId}", {
+      const anthroResponse = await fetch(`/api/user/anthro/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

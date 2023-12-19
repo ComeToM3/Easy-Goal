@@ -31,11 +31,13 @@ export default async function handler(req, res) {
   } else if (req.method === "PUT") {
     // Handle PUT request for updating user macronu data
     try {
-      const { ID, GLCP, GLCG, LIPP, LIPG, PROP, PROG } = req.body;
+      const { id, ID, GLCP, GLCG, LIPP, LIPG, PROP, PROG } = req.body;
       const { startOfDay, endOfDay } = DayFilter();
       await prisma.Macronutriments.update({
         where: {
+          id: id,
           timeSp: {
+      
             gte: startOfDay,
             lt: endOfDay,
           },

@@ -8,16 +8,14 @@ export default async function handler(req, res) {
       const userId = req.query.userId;
       const { startOfDay, endOfDay } = DayFilter();
 
-      const anthroData = await prisma.Metabolisme.findMany({
+      const anthroData = await prisma.Metabolisme.findFirst({
         where: {
           timeSp: {
             gte: startOfDay,
             lt: endOfDay,
           },
-          userId: userId,
         },
       });
-
       if (anthroData) {
         res.status(200).json(anthroData);
       } else {
@@ -32,11 +30,12 @@ export default async function handler(req, res) {
   } else if (req.method === "PUT") {
     // Handle PUT request for updating user metabolic data
     try {
-      const { ID, CA, MB, BEE } = req.body;
+      const { id, ID, CA, MB, BEE } = req.body;
       const { startOfDay, endOfDay } = DayFilter();
 
       await prisma.Metabolisme.update({
         where: {
+          id: id,
           timeSp: {
             gte: startOfDay,
             lt: endOfDay,

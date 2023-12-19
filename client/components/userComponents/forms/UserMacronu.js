@@ -8,6 +8,7 @@ export default function Macronu({ closeToggle }) {
   const [proteinesFocused, setProteinesFocused] = useState(false);
   const [lipidesFocused, setLipidesFocused] = useState(false);
   const [bee, setBee] = useState("");
+  const [macronuId, setMacronuId] = useState("");
 
   const getMetabolResponse = async () => {
     const token = localStorage.getItem("token");
@@ -15,7 +16,6 @@ export default function Macronu({ closeToggle }) {
     const userId = decodedToken.userId;
 
     try {
-      // Faites une requête GET pour récupérer la réponse MetabolResponse
       const response = await fetch(`/api/user/metabol/${userId}`, {
         method: "GET",
         headers: {
@@ -65,11 +65,12 @@ export default function Macronu({ closeToggle }) {
     }
   };
 
-
   useEffect(() => {
-
     getMacronuResponse().then((res) => {
       if (res) {
+        if (res.id !== undefined) {
+          setMacronuId(res.id);
+        }
         if (res.glcP !== undefined) {
           setGlucidesP(res.glcP);
         }
@@ -82,7 +83,6 @@ export default function Macronu({ closeToggle }) {
       }
     });
   }, []);
-  
 
   useEffect(() => {
     getMetabolResponse().then((res) => {
@@ -149,6 +149,7 @@ export default function Macronu({ closeToggle }) {
     const proteinesG = (((proteinesP / 100) * bee) / 4).toFixed(0);
     const lipidesG = (((lipidesP / 100) * bee) / 9).toFixed(0);
     const updateMacronuData = {
+      id: macronuId,
       ID: userId,
       GLCP: glucidesP,
       GLCG: glucidesG,
@@ -157,7 +158,6 @@ export default function Macronu({ closeToggle }) {
       PROP: proteinesP,
       PROG: proteinesG,
     };
-
     try {
       // Envoi des données pour le métabolisme
       const macronuResponse = await fetch(`/api/user/macronu/${userId}`, {
@@ -182,6 +182,38 @@ export default function Macronu({ closeToggle }) {
       <div onClick={(e) => e.stopPropagation()}>
         <form>
           <h1 onChange={setBee}> Besoins Énergétiques : {bee} kcal/jour</h1>
+          <h3>Recommandations glucides </h3>
+          {glucidesFocused && (
+          <div className="flex justify-center">
+            
+            <ul>
+              <li>45 à 65% de l’apport énergétique</li>
+              <li>Minimum de 80-100g pour les fonctions neurologiques</li>
+            </ul>
+          </div>
+        )}
+
+        {proteinesFocused && (
+          <div>
+            <h3>Recommandations protéines </h3>
+            <ul>
+              <li>10 à 35% de l’apport énergétique</li>
+              <li>0,8 g/kg poids corporel</li>
+            </ul>
+          </div>
+        )}
+
+        {lipidesFocused && (
+          <div>
+            <h3>Recommandations lipides</h3>
+            <ul>
+              <li>20 à 35% de l’apport énergétique</li>
+              <li>Acide gras saturés Maximum 10%</li>
+             
+            </ul>
+          </div>
+        )}
+
           <div className="div-calorique">
             <label>Glucides % : </label>
             <input
@@ -241,45 +273,7 @@ export default function Macronu({ closeToggle }) {
           </div>
         </form>
 
-        {glucidesFocused && (
-          <div className="">
-            <h3>Recommandations glucides </h3>
-            <ul>
-              <li>45 à 65% de l’énergie</li>
-              <li>Minimum de 80-100g pour les fonctions neurologiques</li>
-              <li>Favoriser les glucides non-raffinés</li>
-              <li>Favoriser les aliments riche fibres</li>
-              <li>Sucres ajoutés 25% de l’apport énergétique total</li>
-            </ul>
-          </div>
-        )}
-
-        {proteinesFocused && (
-          <div>
-            <h3>Recommandations protéines </h3>
-            <ul>
-              <li>Adulte 10 à 35% de l’apport énergétique</li>
-              <li>0,8 g/kg poids corporel</li>
-            </ul>
-          </div>
-        )}
-
-        {lipidesFocused && (
-          <div>
-            <h3>Recommandations lipides</h3>
-            <ul>
-              <li>Adulte 20 à 35% de l’apport énergétique</li>
-              <li>Acide gras saturés Maximum 10% de l’énergie totale</li>
-              <li>
-                Acide gras polyinsaturés Oméga-6 : 5 à 10% de l’apport
-                énergétique
-              </li>
-              <li>Oméga-3: 0,5 à 1,2 % de l’apport énergétique</li>
-              <li>Acide gras trans Réduire au minimum</li>
-            </ul>
-          </div>
-        )}
-
+        
         <div>
           <div className="info-item">
             <h3>Glucides en grammes :</h3>

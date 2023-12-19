@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 export default function Motiv({ closeToggle }) {
+  
   const questions = [
     /* Liste de tes questions ici */
 

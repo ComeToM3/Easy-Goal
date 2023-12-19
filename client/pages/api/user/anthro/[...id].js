@@ -32,11 +32,12 @@ export default async function handler(req, res) {
   } else if (req.method === "PUT") {
     // Handle PUT request for updating user metabolic data
     try {
-      const { ID, CA, KG, CM, AGE, GEN, IMC } = req.body;
+      const { id, ID, CA, KG, CM, AGE, GEN, IMC } = req.body;
       const { startOfDay, endOfDay } = DayFilter();
-console.log(ID, CA, KG, CM, AGE, GEN, IMC );
+      console.log(req.body);
       await prisma.Anthropometrie.update({
         where: {
+          id: id,
           timeSp: {
             gte: startOfDay,
             lt: endOfDay,
