@@ -3,7 +3,9 @@
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
-import prisma from "../../lib/prismaClient";
+import { db }  from "../../lib/firebaseConfig";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore/lite";
+
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -11,14 +13,12 @@ export default async function handler(req, res) {
       const { userPrenom, userNom, userEmail, userPassword } = req.body;
 
 
-      // Vérifier si l'email existe déjà dans la base de données
-      const existingUser = await prisma.User.findUnique({
-        where: {
-          email: userEmail,
-        },
-      });
+      // Vérifier si l'email existe déjà dans la base de données Firebase
+      const usersCollection = collection(db, 'users');
+      const emailQuery = query(usersCollection, where('email', '==', userEmail));
+      const querySnapshot = await getDocs(emailQuery);
 
-      if (existingUser) {
+      if (!querySnapshot.empty) {
         return res.status(400).json({ message: "Cet email est déjà utilisé" });
       }
 
@@ -26,16 +26,13 @@ export default async function handler(req, res) {
 
       const hashedPassword = await bcrypt.hash(userPassword, 10);
 
-      const signupEntry = await prisma.User.create({
-        data: {
-          id: userId.toString(),
-          prenom: userPrenom,
-          nom: userNom,
-          email: userEmail.toString(),
-          password: hashedPassword.toString(),
-          timeSp: new Date()
-
-        },
+      await addDoc(collection(db, 'users'), {
+        id: userId.toString(),
+        prenom: userPrenom,
+        nom: userNom,
+        email: userEmail.toString(),
+        password: hashedPassword.toString(),
+        timeSp: new Date()
       });
      
 
@@ -43,7 +40,7 @@ export default async function handler(req, res) {
 
       res.status(200).json({ message: "Inscription réussie", token });
     } catch (error) {
-      console.error("Erreur Prisma:", error);
+      console.error("Erreur:", error);
       res.status(500).json({ message: "Erreur lors de l'inscription", error });
     }
   } else {

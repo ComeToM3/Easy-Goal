@@ -199,13 +199,13 @@ select {
 /* Formulaire Login Fin */
 
 
-/* CSS */
-
-.ulayout-content {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.ulayout-content.active {
-  opacity: 1;
+/* Fiche Objectifs */
+.obj-modal {
+  background-color: white;
+  width: auto;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: .5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
