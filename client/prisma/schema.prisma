@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(uuid())
+  prenom   String
+  nom      String
+  email    String   @unique
+  password String
+  timeSp   DateTime
+
+  metabolisme       Metabolisme[]
+  macronutriments   Macronutriments[]
+  anthropometrie    Anthropometrie[]
+  preContemplations PreContemplation[]
+  contemplations    Contemplation[]
+  actions           Action[]
+  maintenances      Maintenance[]
+  moyRes            MoyRes[]
+  objectifs         Objectifs[]
+}
+
+model Metabolisme {
+  id     String   @id @default(uuid())
+  ca     String
+  mb     String
+  bee    String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+}
+
+model Anthropometrie {
+  id     String   @id @default(uuid())
+  imc    String
+  kg     String
+  cm     String
+  age    String
+  gen    String
+  ca     String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+}
+
+model Macronutriments {
+  id     String   @id @default(uuid())
+  glcP   String
+  glcG   String
+  lipP   String
+  lipG   String
+  proP   String
+  proG   String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+}
+
+model PreContemplation {
+  id     String   @id @default(uuid())
+  q1     String
+  q5     String
+  q11    String
+  q13    String
+  q32    String
+  q26    String
+  q29    String
+  q31    String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  // Autres champs comme le timestamp, si nécessaire
+}
+
+model Contemplation {
+  id     String   @id @default(uuid())
+  q2     String
+  q4     String
+  q8     String
+  q12    String
+  q15    String
+  q19    String
+  q21    String
+  q24    String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  // Autres champs comme le timestamp, si nécessaire
+}
+
+model Action {
+  id     String   @id @default(uuid())
+  q3     String
+  q7     String
+  q10    String
+  q14    String
+  q17    String
+  q20    String
+  q25    String
+  q30    String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  // Autres champs comme le timestamp, si nécessaire
+}
+
+model Maintenance {
+  id     String   @id @default(uuid())
+  q6     String
+  q9     String
+  q16    String
+  q18    String
+  q22    String
+  q27    String
+  q28    String
+  q32    String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  // Autres champs comme le timestamp, si nécessaire
+}
+
+model MoyRes {
+  id     String   @id @default(uuid())
+  moyPc  String
+  moyC   String
+  moyA   String
+  moyM   String
+  res    String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  // Autres champs comme le timestamp, si nécessaire
+}
+
+model Objectifs {
+  id     String   @id @default(uuid())
+  ltg    String
+  obj1   String
+  act1   String
+  toa1   String
+  obj2   String
+  act2   String
+  toa2   String
+  owk    String
+  psb    String
+  timeSp DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  // Autres champs comme le timestamp, si nécessaire
+}
