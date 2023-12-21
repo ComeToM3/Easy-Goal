@@ -36,7 +36,7 @@ export default function FicheInfo({ closeToggle }) {
       TOA2: formData.toAchieveAccept,
       OWK: formData.othersWillKnow,
       PSB: formData.potentialSabotage,
-      IPR: formData.iPromiseTo,
+      IPT: formData.iPromiseTo,
       OBJ1: formData.objectif1,
       ACT1: formData.action1,
       OBJ2: formData.objectif2,
