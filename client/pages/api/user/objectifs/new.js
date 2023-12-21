@@ -14,15 +14,16 @@ export default async function handler(req, res) {
 
       const existingTimeSpQuery = query(
         collection(db, "Objectifs"),
-       // where("timeSp", ">=", startOfMonth),
-       // where("timeSp", "<", endOfMonth),
+       where("timeSp", ">=", startOfMonth),
+       where("timeSp", "<", endOfMonth),
         where("userId", "==", ID)
       );
 
       const existingTimeSpSnapshot = await getDocs(existingTimeSpQuery);
 
+      console.log(existingTimeSpSnapshot);
       if (!existingTimeSpSnapshot.empty) {
-        return res.status(400).json({ message: "Une entrée par jour" });
+        return res.status(400).json({ message: "Une entrée par mois" });
       }
 
       const newEntryData = {

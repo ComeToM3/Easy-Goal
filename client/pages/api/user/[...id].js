@@ -1,4 +1,4 @@
-import prisma from "../../../lib/prismaClient";
+import { db } from "../../../lib/firebaseConfig";
 import DayFilter from "@/utils/dayFilter";
 
 export default async function handler(req, res) {

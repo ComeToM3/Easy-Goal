@@ -1,4 +1,4 @@
-import prisma from "../../../../../lib/prismaClient";
+import { db } from "../../../../../lib/firebaseConfig";
 import DayFilter from "@/utils/dayFilter";
 
 export default async function handler(req, res) {
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         res.status(404).json({ message: "Données non trouvées" });
       }
     } catch (error) {
-      console.error("Erreur Prisma:", error);
+      console.error("Erreur :", error);
       res.status(500).json({ message: "Erreur lors de la requête", error });
     }
   } else if (req.method === "PUT") {
@@ -59,7 +59,7 @@ export default async function handler(req, res) {
 
       res.status(200).json(updatedObjectifsData);
     } catch (error) {
-      console.error("Erreur Prisma:", error);
+      console.error("Erreur :", error);
       res.status(500).json({ message: "Erreur lors de la mise à jour", error });
     }
   } else {

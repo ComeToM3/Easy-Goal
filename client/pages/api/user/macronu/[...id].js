@@ -1,4 +1,12 @@
-import prisma from "../../../../lib/prismaClient";
+import { db } from "../../../../lib/firebaseConfig";
+
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+} from "firebase/firestore/lite";
 import DayFilter from "@/utils/dayFilter";
 
 export default async function handler(req, res) {
@@ -37,7 +45,6 @@ export default async function handler(req, res) {
         where: {
           id: id,
           timeSp: {
-      
             gte: startOfDay,
             lt: endOfDay,
           },
@@ -59,7 +66,7 @@ export default async function handler(req, res) {
         res.status(404).json({ message: "Aucune entrée à mettre à jour" });
       }
     } catch (error) {
-      console.error("Erreur Prisma:", error);
+      console.error("Erreur :", error);
       res.status(500).json({ message: "Erreur lors de la requête", error });
     }
   } else {

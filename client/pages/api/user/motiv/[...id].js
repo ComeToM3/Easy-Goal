@@ -1,4 +1,6 @@
-import prisma from "../../../../lib/prismaClient";
+import { db } from "../../../../lib/firebaseConfig";
+
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore/lite";
 import DayFilter from "@/utils/dayFilter";
 
 export default async function handler(req, res) {
@@ -18,7 +20,7 @@ export default async function handler(req, res) {
         res.status(200).json(motivResData);
       }
     } catch (error) {
-      console.error("Erreur Prisma:", error);
+      console.error("Erreur :", error);
       res.status(500).json({ message: "Erreur lors de la requête", error });
     }
   } else {
